@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Idle Farm Game</title>
+    <style>
+        /* --- CSS Styles Here (See CSS Code Section Below) --- */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Idle Farm Game</h1>
+        <!-- Resources Display -->
+        <div class="resources">
+            <div>Coins: <span id="coins">0</span></div>
+            <div>Gems: <span id="gems">0</span></div>
+            <div>Tokens: <span id="tokens">0</span></div>
+        </div>
+
+        <!-- Game Sections -->
+        <div id="game-sections">
+            <!-- Crops Section -->
+            <div class="section" id="crops-section">
+                <h2>Crops 🌱</h2>
+                <div class="container-flex" id="crops-container">
+                    <!-- Crops will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Animals Section -->
+            <div class="section" id="animals-section">
+                <h2>Animals 🐄</h2>
+                <div class="container-flex" id="animals-container">
+                    <!-- Animals will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Upgrades Section -->
+            <div class="section" id="upgrades-section">
+                <h2>Upgrades 🚜</h2>
+                <div class="container-flex" id="upgrades-container">
+                    <!-- Upgrades will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Passive Farms Section -->
+            <div class="section" id="passive-farms-section">
+                <h2>Passive Farms 🌾</h2>
+                <div class="container-flex" id="passive-farms-container">
+                    <!-- Passive Farms will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Quests Section -->
+            <div class="section" id="quests-section">
+                <h2>Quests 🎯</h2>
+                <div id="quests-container">
+                    <!-- Quests will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Achievements Section -->
+            <div class="section" id="achievements-section">
+                <h2>Achievements 🏆</h2>
+                <div id="achievements-container">
+                    <!-- Achievements will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Pets Section -->
+            <div class="section" id="pets-section">
+                <h2>Pets 🐾</h2>
+                <div class="container-flex" id="pets-container">
+                    <!-- Pets will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Black Market Section -->
+            <div class="section" id="blackmarket-section">
+                <h2>Black Market 💱</h2>
+                <div class="container-flex" id="blackmarket-container">
+                    <!-- Black Market items will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Mini Games Section -->
+            <div class="section" id="minigames-section">
+                <h2>Mini Games 🕹️</h2>
+                <div class="container-flex" id="minigames-container">
+                    <!-- Mini Games will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Prestige Section -->
+            <div class="section" id="prestige-section">
+                <h2>Prestige ✨</h2>
+                <button id="prestige-button">Prestige</button>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="section" id="settings-section">
+                <h2>Settings ⚙️</h2>
+                <button id="settings-button">Open Settings</button>
+            </div>
+        </div>
+
+        <!-- Modals -->
+        <div id="modal-container">
+            <!-- Generic Modal -->
+            <div class="modal" id="generic-modal">
+                <div class="modal-content" id="generic-modal-content">
+                    <!-- Content will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div id="notification-container"></div>
+
+        <!-- Auto-Save Notification -->
+        <div id="auto-save-notification">Game Saved!</div>
+    </div>
+
+    <!-- Toggle Buttons -->
+    <button id="focus-mode-toggle">🔒</button>
+    <button id="theme-toggle">🌙</button>
+
+    <!-- Version Display -->
+    <div id="version-display">Version 1.0.0</div>
+
+    <!-- JavaScript -->
+    <script>
+        // --- JavaScript Code Here (See JavaScript Code Section Below) ---
+    </script>
+</body>
+</html>
+/* Reset and Basic Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e0f7fa;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Resources Display */
+.resources {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+.resources div {
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Sections */
+.section {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.section h2 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Containers */
+.container-flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Items */
+.item {
+    background-color: #f1f1f1;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px;
+    width: 150px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s, background-color 0.3s, color 0.3s;
+}
+
+.item:hover {
+    transform: scale(1.05);
+    background-color: #d1e7dd;
+}
+
+.emoji {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+/* Progress Bars */
+.progress-bar {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 10px;
+    margin-top: 10px;
+}
+
+.progress-bar-inner {
+    height: 100%;
+    width: 0%;
+    background-color: #28a745;
+    transition: width 1s linear;
+}
+
+/* Buttons */
+button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* Tooltips */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above the element */
+    left: 50%;
+    margin-left: -80px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Notifications */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.notification {
+    background-color: #ffc107;
+    color: #212529;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+/* In-Game Modals */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    position: relative;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Auto-Save Notification */
+#auto-save-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #17a2b8;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+/* Toggle Buttons */
+#focus-mode-toggle, #theme-toggle {
+    position: fixed;
+    top: 20px;
+    padding: 10px 15px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s;
+}
+
+#focus-mode-toggle:hover, #theme-toggle:hover {
+    background-color: #0056b3;
+}
+
+#focus-mode-toggle {
+    left: 20px;
+}
+
+#theme-toggle {
+    left: 70px;
+}
+
+/* Version Display */
+#version-display {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 0.8em;
+    color: #555;
+}
+// Global Variables
+let coins = 0;
+let gems = 0;
+let tokens = 0;
+let coinMultiplier = 1;
+let prestigeCount = 0;
+let playerNetWorth = 0;
+let theme = 'light';
+let focusMode = false;
+let dailyBonusClaimed = false;
+let isTutorialActive = false;
+let tutorialStep = 1;
+
+let growthTimers = {};
+let passiveTimers = {};
+let achievements = {};
+let quests = [];
+let completedQuests = [];
+let ownedPets = [];
+let equippedPets = [];
+
+const growthTimes = {
+    wheat: 5,
+    corn: 8,
+    pumpkin: 12,
+    tomato: 7,
+    carrot: 6
+};
+
+const baseRewards = {
+    wheat: 10,
+    corn: 20,
+    pumpkin: 30,
+    tomato: 15,
+    carrot: 12
+};
+
+const animals = {
+    chicken: { time: 10, reward: 15 },
+    cow: { time: 15, reward: 25 },
+    sheep: { time: 20, reward: 35 },
+    goat: { time: 18, reward: 28 },
+    duck: { time: 12, reward: 18 },
+    pig: { time: 25, reward: 40 }
+};
+
+// Initialize Game
+function initGame() {
+    loadGame();
+    renderCrops();
+    renderAnimals();
+    renderUpgrades();
+    renderPassiveFarms();
+    generateQuests();
+    renderQuests();
+    generateAchievements();
+    renderAchievements();
+    renderPets();
+    renderBlackMarket();
+    renderMiniGames();
+    updateResources();
+    updateTheme();
+    checkDailyBonus();
+    showAutoSaveNotification();
+    startPassiveIncome();
+    initializeEventListeners();
+    checkAndStartTutorial();
+}
+
+window.onload = initGame;
+
+/* --- Rendering Functions --- */
+
+// Render Crops
+function renderCrops() {
+    const container = document.getElementById('crops-container');
+    for (let crop in growthTimes) {
+        let cropDiv = document.createElement('div');
+        cropDiv.classList.add('item', 'crop');
+        cropDiv.id = crop;
+        cropDiv.innerHTML = `
+            <div class="emoji">${getCropEmoji(crop)}</div>
+            <h3>${capitalize(crop)}</h3>
+            <button class="grow-btn" data-crop="${crop}">Grow</button>
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="${crop}-progress"></div>
+            </div>
+        `;
+        container.appendChild(cropDiv);
+    }
+}
+
+// Render Animals
+function renderAnimals() {
+    const container = document.getElementById('animals-container');
+    for (let animal in animals) {
+        let animalDiv = document.createElement('div');
+        animalDiv.classList.add('item', 'animal');
+        animalDiv.id = animal;
+        animalDiv.innerHTML = `
+            <div class="emoji">${getAnimalEmoji(animal)}</div>
+            <h3>${capitalize(animal)}</h3>
+            <button class="collect-btn" data-animal="${animal}">Collect</button>
+            <div class="progress-bar">
+                <div class="progress-bar-inner" id="${animal}-progress"></div>
+            </div>
+        `;
+        container.appendChild(animalDiv);
+    }
+}
+
+// Render Upgrades
+function renderUpgrades() {
+    const upgrades = [
+        { id: 'upgrade1', name: 'Faster Growth', cost: 100, effect: 'reduceGrowthTime' },
+        { id: 'upgrade2', name: 'More Coins', cost: 200, effect: 'increaseCoinReward' }
+    ];
+    const container = document.getElementById('upgrades-container');
+    upgrades.forEach(upgrade => {
+        let upgradeDiv = document.createElement('div');
+        upgradeDiv.classList.add('item', 'upgrade');
+        upgradeDiv.id = upgrade.id;
+        upgradeDiv.innerHTML = `
+            <h3>${upgrade.name}</h3>
+            <p>Cost: ${upgrade.cost} Coins</p>
+            <button class="buy-upgrade-btn" data-upgrade="${upgrade.id}">Buy</button>
+        `;
+        container.appendChild(upgradeDiv);
+    });
+}
+
+// Render Passive Farms
+function renderPassiveFarms() {
+    const farms = [
+        { id: 'passive1', name: 'Chicken Farm', cost: 500, interval: 30, reward: 50 },
+        { id: 'passive2', name: 'Cow Ranch', cost: 1000, interval: 60, reward: 100 }
+    ];
+    const container = document.getElementById('passive-farms-container');
+    farms.forEach(farm => {
+        let farmDiv = document.createElement('div');
+        farmDiv.classList.add('item', 'passive-farm');
+        farmDiv.id = farm.id;
+        farmDiv.setAttribute('data-farm', farm.id);
+        farmDiv.innerHTML = `
+            <h3>${farm.name}</h3>
+            <p>Cost: ${farm.cost} Coins</p>
+            <button class="buy-passive-btn" data-farm="${farm.id}">Buy</button>
+        `;
+        container.appendChild(farmDiv);
+    });
+}
+
+// Render Quests
+function renderQuests() {
+    const container = document.getElementById('quests-container');
+    container.innerHTML = '';
+    quests.forEach(quest => {
+        if (!completedQuests.includes(quest.id)) {
+            let questDiv = document.createElement('div');
+            questDiv.classList.add('item', 'quest');
+            questDiv.innerHTML = `<h4>${quest.description}</h4><p>Reward: ${quest.reward}</p>`;
+            container.appendChild(questDiv);
+        }
+    });
+}
+
+// Render Achievements
+function renderAchievements() {
+    const container = document.getElementById('achievements-container');
+    container.innerHTML = '';
+    for (let key in achievements) {
+        let ach = achievements[key];
+        let achDiv = document.createElement('div');
+        achDiv.classList.add('item', 'achievement');
+        achDiv.innerHTML = `<h4>${ach.achieved ? '✅' : '🔄'} ${ach.description}</h4><p>Reward: ${ach.reward}</p>`;
+        container.appendChild(achDiv);
+    }
+}
+
+// Render Pets
+function renderPets() {
+    const container = document.getElementById('pets-container');
+    container.innerHTML = '';
+    ownedPets.forEach((pet, index) => {
+        let petDiv = document.createElement('div');
+        petDiv.classList.add('item', 'pet-owned');
+        petDiv.innerHTML = `
+            <div class="emoji">${getPetEmoji(pet.name)}</div>
+            <h3>${pet.name} (${pet.rarity})</h3>
+            <p>Benefit: ${getBenefitDescription(pet.benefit)}</p>
+            <button data-index="${index}" class="equip-pet-button">Equip</button>
+        `;
+        container.appendChild(petDiv);
+    });
+    // Add the Spin Pet Wheel button
+    let spinDiv = document.createElement('div');
+    spinDiv.classList.add('item', 'pet');
+    spinDiv.innerHTML = `
+        <h3>Spin Pet Wheel</h3>
+        <p>(10 Tokens)</p>
+        <button id="spinPetButton">Spin</button>
+    `;
+    container.appendChild(spinDiv);
+}
+
+// Render Black Market
+function renderBlackMarket() {
+    const blackMarketItems = generateBlackMarketItems();
+    const container = document.getElementById('blackmarket-container');
+    container.innerHTML = '';
+    const itemsToShow = getBlackMarketItemsToShow(blackMarketItems);
+    itemsToShow.forEach((item, index) => {
+        let itemDiv = document.createElement('div');
+        itemDiv.classList.add('item', 'blackmarket');
+        itemDiv.innerHTML = `
+            <div class="emoji">${item.animal}</div>
+            <h3>${item.rarity} Animal</h3>
+            <p>Cost: ${item.cost} Coins</p>
+            <button data-index="${index}" class="buy-blackmarket-item">Buy</button>
+        `;
+        container.appendChild(itemDiv);
+    });
+}
+
+// Render Mini Games
+function renderMiniGames() {
+    const miniGames = [
+        { id: 'flappyFarm', name: 'Flappy Farm', description: 'Fly through obstacles!' },
+        { id: 'memoryMatch', name: 'Memory Match', description: 'Match the cards!' }
+    ];
+    const container = document.getElementById('minigames-container');
+    miniGames.forEach(game => {
+        let gameDiv = document.createElement('div');
+        gameDiv.classList.add('item', 'minigame');
+        gameDiv.innerHTML = `
+            <h3>${game.name}</h3>
+            <p>${game.description}</p>
+            <button class="play-minigame-button" data-game="${game.id}">Play</button>
+        `;
+        container.appendChild(gameDiv);
+    });
+}
+
+/* --- Utility Functions --- */
+
+// Capitalize Function
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Get Crop Emoji
+function getCropEmoji(crop) {
+    const map = {
+        wheat: '🌾',
+        corn: '🌽',
+        pumpkin: '🎃',
+        tomato: '🍅',
+        carrot: '🥕'
+    };
+    return map[crop] || '🌱';
+}
+
+// Get Animal Emoji
+function getAnimalEmoji(animal) {
+    const map = {
+        chicken: '🐔',
+        cow: '🐮',
+        sheep: '🐑',
+        goat: '🐐',
+        duck: '🦆',
+        pig: '🐷'
+    };
+    return map[animal] || '🐄';
+}
+
+// Get Pet Emoji
+function getPetEmoji(name) {
+    const map = {
+        'Pup': '🐶',
+        'Kitty': '🐱',
+        'Dragon': '🐉',
+        'Unicorn': '🦄',
+        'Phoenix': '🔥'
+    };
+    return map[name] || '🐾';
+}
+
+// Get Benefit Description
+function getBenefitDescription(benefit) {
+    const map = {
+        'moneyBoost': 'Increase coin earnings by 10%',
+        'timeBoost': 'Decrease growth times by 10%',
+        'coinMultiplier': 'Increase coin multiplier by 10%',
+        'allBoost': 'Increase all earnings by 10%',
+        'autoHarvest': 'Automatically harvest crops every 60s'
+    };
+    return map[benefit] || 'No benefit';
+}
+
+// Get Owned Passive Farms
+function getOwnedPassiveFarms() {
+    let owned = [];
+    document.querySelectorAll('.passive-farm.owned').forEach(el => owned.push(el.getAttribute('data-farm')));
+    return owned;
+}
+
+// Generate Random Tip
+function getRandomTip() {
+    const tips = [
+        "Focus on upgrading wheat and chicken early to maximize your income.",
+        "Invest in passive farms to earn coins even when you're not actively playing.",
+        "Complete quests for additional rewards and progression.",
+        "Prestiging can significantly boost your coin earnings over time.",
+        "Balance your investments between crops and animals for steady income."
+    ];
+    return tips[Math.floor(Math.random() * tips.length)];
+}
+
+/* --- Event Listeners --- */
+
+function initializeEventListeners() {
+    // Grow Crop Button
+    document.querySelectorAll('.grow-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const crop = this.getAttribute('data-crop');
+            growCrop(crop);
+        });
+    });
+
+    // Collect Animal Button
+    document.querySelectorAll('.collect-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const animal = this.getAttribute('data-animal');
+            collectAnimal(animal);
+        });
+    });
+
+    // Buy Upgrade Button
+    document.querySelectorAll('.buy-upgrade-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const upgradeId = this.getAttribute('data-upgrade');
+            buyUpgrade(upgradeId);
+        });
+    });
+
+    // Buy Passive Farm Button
+    document.querySelectorAll('.buy-passive-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const farmId = this.getAttribute('data-farm');
+            buyPassiveFarm(farmId);
+        });
+    });
+
+    // Equip Pet Button
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('.equip-pet-button')) {
+            const index = parseInt(event.target.getAttribute('data-index'));
+            equipPet(index);
+        }
+    });
+
+    // Spin Pet Wheel Button
+    document.getElementById('spinPetButton').addEventListener('click', spinPetWheel);
+
+    // Buy Black Market Item Button
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('.buy-blackmarket-item')) {
+            const index = parseInt(event.target.getAttribute('data-index'));
+            buyBlackMarketItem(index);
+        }
+    });
+
+    // Play Mini Game Button
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('.play-minigame-button')) {
+            const gameId = event.target.getAttribute('data-game');
+            openMiniGame(gameId);
+        }
+    });
+
+    // Prestige Button
+    document.getElementById('prestige-button').addEventListener('click', openPrestigeModal);
+
+    // Settings Button
+    document.getElementById('settings-button').addEventListener('click', openSettingsModal);
+
+    // Close Modal Button
+    document.addEventListener('click', function (event) {
+        if (event.target.matches('.close')) {
+            const modal = event.target.closest('.modal');
+            modal.style.display = 'none';
+        }
+    });
+
+    // Focus Mode Toggle
+    document.getElementById('focus-mode-toggle').addEventListener('click', toggleFocusMode);
+
+    // Theme Toggle
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', keyboardNavigation);
+}
+
+/* --- Game Logic Functions --- */
+
+// Grow Crop
+function growCrop(crop) {
+    if (growthTimers[crop]) return; // Prevent multiple growth timers
+    const progressBar = document.getElementById(`${crop}-progress`);
+    let time = growthTimes[crop];
+    progressBar.style.width = '0%';
+    let startTime = Date.now();
+    growthTimers[crop] = setInterval(() => {
+        let elapsed = (Date.now() - startTime) / 1000;
+        let progress = Math.min((elapsed / time) * 100, 100);
+        progressBar.style.width = `${progress}%`;
+        if (progress >= 100) {
+            clearInterval(growthTimers[crop]);
+            growthTimers[crop] = null;
+            coins += baseRewards[crop] * coinMultiplier;
+            playerNetWorth += baseRewards[crop] * coinMultiplier;
+            showNotification(`Harvested ${crop}! +${baseRewards[crop] * coinMultiplier} Coins`);
+            updateResources();
+            checkQuests(crop, 'crop');
+            checkAchievements(crop, 'crop');
+            saveGame();
+        }
+    }, 100);
+}
+
+// Collect Animal
+function collectAnimal(animal) {
+    if (growthTimers[animal]) return; // Prevent multiple growth timers
+    const progressBar = document.getElementById(`${animal}-progress`);
+    let time = animals[animal].time;
+    progressBar.style.width = '0%';
+    let startTime = Date.now();
+    growthTimers[animal] = setInterval(() => {
+        let elapsed = (Date.now() - startTime) / 1000;
+        let progress = Math.min((elapsed / time) * 100, 100);
+        progressBar.style.width = `${progress}%`;
+        if (progress >= 100) {
+            clearInterval(growthTimers[animal]);
+            growthTimers[animal] = null;
+            coins += animals[animal].reward * coinMultiplier;
+            playerNetWorth += animals[animal].reward * coinMultiplier;
+            showNotification(`Collected from ${animal}! +${animals[animal].reward * coinMultiplier} Coins`);
+            updateResources();
+            checkQuests(animal, 'animal');
+            checkAchievements(animal, 'animal');
+            saveGame();
+        }
+    }, 100);
+}
+
+// Buy Upgrade
+function buyUpgrade(upgradeId) {
+    const upgrades = {
+        'upgrade1': { cost: 100, effect: 'reduceGrowthTime' },
+        'upgrade2': { cost: 200, effect: 'increaseCoinReward' }
+    };
+    const upgrade = upgrades[upgradeId];
+    if (coins >= upgrade.cost) {
+        coins -= upgrade.cost;
+        playerNetWorth += upgrade.cost;
+        if (upgrade.effect === 'reduceGrowthTime') {
+            for (let crop in growthTimes) {
+                growthTimes[crop] = Math.max(1, growthTimes[crop] - 1);
+            }
+        } else if (upgrade.effect === 'increaseCoinReward') {
+            coinMultiplier += 0.1;
+        }
+        showNotification(`Purchased ${upgradeId}`);
+        updateResources();
+        checkQuests(null, 'upgrade');
+        checkAchievements(null, 'upgrade');
+        saveGame();
+    } else {
+        showNotification('Not enough coins!');
+    }
+}
+
+// Buy Passive Farm
+function buyPassiveFarm(farmId) {
+    const farms = {
+        'passive1': { cost: 500, interval: 30, reward: 50 },
+        'passive2': { cost: 1000, interval: 60, reward: 100 }
+    };
+    const farm = farms[farmId];
+    const farmElement = document.getElementById(farmId);
+    if (!farmElement.classList.contains('owned')) {
+        if (coins >= farm.cost) {
+            coins -= farm.cost;
+            playerNetWorth += farm.cost;
+            farmElement.classList.add('owned');
+            startPassiveFarmIncome(farmId);
+            showNotification(`Purchased ${farm.name}`);
+            updateResources();
+            checkQuests(null, 'passive');
+            checkAchievements(null, 'passive');
+            saveGame();
+        } else {
+            showNotification('Not enough coins!');
+        }
+    } else {
+        showNotification('You already own this farm!');
+    }
+}
+
+// Start Passive Income
+function startPassiveIncome() {
+    document.querySelectorAll('.passive-farm.owned').forEach(farmElement => {
+        const farmId = farmElement.getAttribute('data-farm');
+        startPassiveFarmIncome(farmId);
+    });
+}
+
+// Start Passive Farm Income
+function startPassiveFarmIncome(farmId) {
+    const farms = {
+        'passive1': { interval: 30, reward: 50 },
+        'passive2': { interval: 60, reward: 100 }
+    };
+    const farm = farms[farmId];
+    if (passiveTimers[farmId]) return;
+    passiveTimers[farmId] = setInterval(() => {
+        coins += farm.reward * coinMultiplier;
+        playerNetWorth += farm.reward * coinMultiplier;
+        showNotification(`Passive income from ${farmId}: +${farm.reward * coinMultiplier} Coins`);
+        updateResources();
+        saveGame();
+    }, farm.interval * 1000);
+}
+
+// Spin Pet Wheel
+function spinPetWheel() {
+    if (tokens < 10) {
+        showNotification('Not enough tokens to spin the wheel!');
+        return;
+    }
+    tokens -= 10;
+    updateResources();
+    const pet = getRandomPet();
+    ownedPets.push(pet);
+    showNotification(`You received a ${pet.rarity} Pet: ${pet.name}!`);
+    renderPets();
+    checkQuests(null, 'pet');
+    checkAchievements(null, 'pet');
+    saveGame();
+}
+
+// Get Random Pet
+function getRandomPet() {
+    const pets = [
+        { name: 'Pup', rarity: 'Common', benefit: 'moneyBoost', value: 1.1 },
+        { name: 'Kitty', rarity: 'Uncommon', benefit: 'timeBoost', value: 1.2 },
+        { name: 'Dragon', rarity: 'Rare', benefit: 'coinMultiplier', value: 1.3 },
+        { name: 'Unicorn', rarity: 'Epic', benefit: 'allBoost', value: 1.4 },
+        { name: 'Phoenix', rarity: 'Mythic', benefit: 'autoHarvest', value: 1.5 }
+    ];
+    return pets[Math.floor(Math.random() * pets.length)];
+}
+
+// Equip Pet
+function equipPet(index) {
+    if (equippedPets.length >= 2) {
+        showNotification('You can only equip 2 pets at a time.');
+        return;
+    }
+    const pet = ownedPets[index];
+    if (!equippedPets.includes(pet)) {
+        equippedPets.push(pet);
+        showNotification(`${pet.name} equipped! Benefits applied.`);
+        applyPetBenefits();
+        saveGame();
+    } else {
+        showNotification(`${pet.name} is already equipped.`);
+    }
+}
+
+// Apply Pet Benefits
+function applyPetBenefits() {
+    equippedPets.forEach(pet => {
+        switch (pet.benefit) {
+            case 'moneyBoost':
+                coinMultiplier *= pet.value;
+                break;
+            case 'timeBoost':
+                for (let crop in growthTimes) {
+                    growthTimes[crop] = Math.max(1, growthTimes[crop] / pet.value);
+                }
+                break;
+            case 'coinMultiplier':
+                coinMultiplier *= pet.value;
+                break;
+            case 'allBoost':
+                coinMultiplier *= pet.value;
+                break;
+            case 'autoHarvest':
+                if (!growthTimers['autoHarvest']) {
+                    growthTimers['autoHarvest'] = setInterval(() => {
+                        for (let crop in baseRewards) {
+                            coins += baseRewards[crop] * coinMultiplier;
+                            playerNetWorth += baseRewards[crop] * coinMultiplier;
+                        }
+                        updateResources();
+                        showNotification('Auto-harvested all crops!');
+                    }, 60000);
+                }
+                break;
+            default:
+                break;
+        }
+    });
+    updateResources();
+}
+
+// Buy Black Market Item
+function buyBlackMarketItem(index) {
+    const blackMarketItems = generateBlackMarketItems();
+    const item = getBlackMarketItemsToShow(blackMarketItems)[index];
+    if (coins >= item.cost) {
+        coins -= item.cost;
+        tokens += 1;
+        playerNetWorth += item.cost;
+        showNotification(`Purchased ${item.rarity} Animal ${item.animal}!`);
+        addBlackMarketAnimal(item);
+        updateResources();
+        checkQuests(null, 'blackmarket');
+        checkAchievements(null, 'blackmarket');
+        saveGame();
+    } else {
+        showNotification('Not enough coins!');
+    }
+}
+
+// Add Black Market Animal
+function addBlackMarketAnimal(item) {
+    const animalContainer = document.getElementById('animals-container');
+    let animalName = getAnimalName(item.animal) + 'Special';
+    let existingAnimal = document.getElementById(animalName);
+    if (existingAnimal) {
+        // Increment count and update coin boost
+        let countSpan = existingAnimal.querySelector('.count');
+        let currentCount = parseInt(countSpan.innerText);
+        countSpan.innerText = currentCount + 1;
+        let coinBoostPara = existingAnimal.querySelector('p.coin-boost');
+        let newBoost = 1 + (item.benefits.coinBoost - 1) * currentCount;
+        coinBoostPara.innerText = `Coin Boost: x${newBoost.toFixed(1)}`;
+    } else {
+        // Create new animal with benefits
+        let newAnimal = document.createElement('div');
+        newAnimal.classList.add('item', 'animal');
+        newAnimal.id = animalName;
+        newAnimal.innerHTML = `
+            <div class="emoji">${item.animal}</div>
+            <h3>${getAnimalName(item.animal)} (${item.rarity})</h3>
+            <p class="coin-boost">Coin Boost: x${item.benefits.coinBoost}</p>
+            <p>Owned: <span class="count">1</span></p>
+            <button data-animalid="${animalName}" data-basecost="${item.cost}" class="buy-more-special">Buy More</button>
+        `;
+        animalContainer.appendChild(newAnimal);
+    }
+
+    // Attach event listener for "Buy More" button
+    document.querySelectorAll('.buy-more-special').forEach(button => {
+        button.addEventListener('click', function (event) {
+            const animalId = event.target.getAttribute('data-animalid');
+            const baseCost = parseInt(event.target.getAttribute('data-basecost'));
+            buyMoreSpecial(animalId, baseCost);
+        });
+    });
+}
+
+// Buy More Special Animals
+function buyMoreSpecial(animalId, baseCost) {
+    let countSpan = document.getElementById(animalId).querySelector('.count');
+    let count = parseInt(countSpan.innerText);
+    let cost = Math.floor(baseCost * Math.pow(1.5, count));
+    if (coins >= cost) {
+        coins -= cost;
+        countSpan.innerText = count + 1;
+        tokens += 1;
+        playerNetWorth += cost;
+        let coinBoostPara = document.getElementById(animalId).querySelector('p.coin-boost');
+        let currentBoost = parseFloat(coinBoostPara.innerText.split('x')[1]);
+        let newBoost = currentBoost + (baseCost / 1000);
+        coinBoostPara.innerText = `Coin Boost: x${newBoost.toFixed(1)}`;
+        showNotification(`Purchased another ${getAnimalName(animalId.replace('Special', ''))}!`);
+        updateResources();
+        checkAchievements(getAnimalName(animalId.replace('Special', '')), 'animal');
+        saveGame();
+    } else {
+        showNotification('Not enough coins!');
+    }
+}
+
+// Generate Black Market Items
+function generateBlackMarketItems() {
+    const baseAnimals = ['🐶', '🐱', '🦊', '🐰', '🐻'];
+    const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Mythic'];
+    let blackMarketItems = [];
+    baseAnimals.forEach(animal => {
+        rarities.forEach(rarity => {
+            let cost = 100;
+            switch (rarity) {
+                case 'Common':
+                    cost = 100;
+                    break;
+                case 'Uncommon':
+                    cost = 300;
+                    break;
+                case 'Rare':
+                    cost = 600;
+                    break;
+                case 'Epic':
+                    cost = 1000;
+                    break;
+                case 'Mythic':
+                    cost = 2000;
+                    break;
+                default:
+                    cost = 100;
+                    break;
+            }
+            blackMarketItems.push({
+                animal: animal,
+                rarity: rarity,
+                cost: cost,
+                benefits: getBenefitsByRarity(rarity)
+            });
+        });
+    });
+    return blackMarketItems;
+}
+
+// Get Benefits by Rarity
+function getBenefitsByRarity(rarity) {
+    switch (rarity) {
+        case 'Common':
+            return { coinBoost: 1 };
+        case 'Uncommon':
+            return { coinBoost: 1.5 };
+        case 'Rare':
+            return { coinBoost: 2 };
+        case 'Epic':
+            return { coinBoost: 3 };
+        case 'Mythic':
+            return { coinBoost: 5 };
+        default:
+            return { coinBoost: 1 };
+    }
+}
+
+// Get Black Market Items to Show
+function getBlackMarketItemsToShow(blackMarketItems) {
+    let netWorth = playerNetWorth;
+    let itemsToShow = [];
+
+    const sortedItems = blackMarketItems.sort((a, b) => a.cost - b.cost);
+
+    sortedItems.forEach(item => {
+        if (item.cost <= netWorth && itemsToShow.length < 5) {
+            itemsToShow.push(item);
+        }
+    });
+
+    if (itemsToShow.length < 5) {
+        const affordableItems = sortedItems.filter(item => item.cost <= netWorth && !itemsToShow.includes(item));
+        shuffle(affordableItems);
+        affordableItems.forEach(item => {
+            if (itemsToShow.length < 5) {
+                itemsToShow.push(item);
+            }
+        });
+    }
+
+    if (itemsToShow.length < 5) {
+        const remainingItems = sortedItems.filter(item => !itemsToShow.includes(item));
+        shuffle(remainingItems);
+        remainingItems.forEach(item => {
+            if (itemsToShow.length < 5) {
+                itemsToShow.push(item);
+            }
+        });
+    }
+
+    return itemsToShow.slice(0, 5);
+}
+
+// Shuffle Array
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+// Open Mini Game
+function openMiniGame(gameId) {
+    if (gameId === 'flappyFarm') {
+        openFlappyFarm();
+    } else if (gameId === 'memoryMatch') {
+        openMemoryMatch();
+    }
+}
+
+// Open Flappy Farm
+function openFlappyFarm() {
+    showNotification('Flappy Farm is under development!');
+}
+
+// Open Memory Match
+function openMemoryMatch() {
+    showNotification('Memory Match is under development!');
+}
+
+// Open Prestige Modal
+function openPrestigeModal() {
+    openCustomModal(`
+        <h2>Confirm Prestige</h2>
+        <p>Are you sure you want to reset your progress for a Prestige?</p>
+        <button id="confirmPrestigeButton">Yes, Prestige</button>
+        <button id="cancelPrestigeButton">Cancel</button>
+    `);
+    document.getElementById('confirmPrestigeButton').addEventListener('click', confirmPrestige);
+    document.getElementById('cancelPrestigeButton').addEventListener('click', closeModal);
+}
+
+// Confirm Prestige
+function confirmPrestige() {
+    if (coins >= 1000) {
+        coins -= 1000;
+        prestigeCount += 1;
+        coinMultiplier += 0.5;
+        updateResources();
+        showNotification('Prestige achieved! Coin rewards increased.');
+        checkAchievements(null, 'prestige');
+        resetGame(false);
+        closeModal();
+        saveGame();
+    } else {
+        showNotification('Not enough coins to prestige!');
+    }
+}
+
+// Open Settings Modal
+function openSettingsModal() {
+    openCustomModal(`
+        <h2>Settings</h2>
+        <button id="restartTutorialButton">Restart Tutorial</button>
+        <button id="resetProgressButton">Reset Progress</button>
+        <button id="closeSettingsButton">Close</button>
+    `);
+    document.getElementById('restartTutorialButton').addEventListener('click', restartTutorial);
+    document.getElementById('resetProgressButton').addEventListener('click', resetAllProgress);
+    document.getElementById('closeSettingsButton').addEventListener('click', closeModal);
+}
+
+// Open Custom Modal
+function openCustomModal(content) {
+    const modal = document.getElementById('generic-modal');
+    const modalContent = document.getElementById('generic-modal-content');
+    modalContent.innerHTML = `<span class="close">&times;</span>` + content;
+    modal.style.display = 'flex';
+}
+
+// Close Modal
+function closeModal() {
+    const modal = document.getElementById('generic-modal');
+    modal.style.display = 'none';
+}
+
+// Restart Tutorial
+function restartTutorial() {
+    localStorage.removeItem('completedTutorial');
+    isTutorialActive = false;
+    closeModal();
+    checkAndStartTutorial();
+}
+
+// Reset All Progress
+function resetAllProgress() {
+    if (confirm('Are you sure you want to reset all your progress?')) {
+        resetGame(true);
+        closeModal();
+        showNotification('All progress has been reset.');
+    }
+}
+
+// Update Resources
+function updateResources() {
+    document.getElementById('coins').innerText = Math.floor(coins);
+    document.getElementById('gems').innerText = gems;
+    document.getElementById('tokens').innerText = tokens;
+}
+
+// Update Theme
+function updateTheme() {
+    if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+}
+
+// Toggle Theme
+function toggleTheme() {
+    theme = (theme === 'light') ? 'dark' : 'light';
+    updateTheme();
+    saveGame();
+}
+
+// Toggle Focus Mode
+function toggleFocusMode() {
+    focusMode = !focusMode;
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+        if (focusMode) {
+            section.style.display = 'none';
+        } else {
+            section.style.display = 'block';
+        }
+    });
+    document.getElementById('focus-mode-toggle').innerText = focusMode ? '🔓' : '🔒';
+    saveGame();
+}
+
+// Show Notification
+function showNotification(message) {
+    let notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.innerText = message;
+    document.getElementById('notification-container').appendChild(notification);
+    setTimeout(() => {
+        notification.style.opacity = '1';
+    }, 100);
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            notification.remove();
+        }, 500);
+    }, 3000);
+}
+
+// Save Game
+function saveGame() {
+    const gameState = {
+        coins,
+        gems,
+        tokens,
+        growthTimes,
+        prestigeCount,
+        coinMultiplier,
+        achievements,
+        completedQuests,
+        passiveFarms: getOwnedPassiveFarms(),
+        theme,
+        dailyBonusClaimed,
+        playerNetWorth,
+        ownedPets,
+        equippedPets
+    };
+    localStorage.setItem('idleFarmGameState', JSON.stringify(gameState));
+}
+
+// Load Game
+function loadGame() {
+    const savedState = JSON.parse(localStorage.getItem('idleFarmGameState'));
+    if (savedState) {
+        coins = savedState.coins || 0;
+        gems = savedState.gems || 0;
+        tokens = savedState.tokens || 0;
+        growthTimes = savedState.growthTimes || growthTimes;
+        prestigeCount = savedState.prestigeCount || 0;
+        coinMultiplier = savedState.coinMultiplier || 1;
+        achievements = savedState.achievements || {};
+        completedQuests = savedState.completedQuests || [];
+        theme = savedState.theme || 'light';
+        dailyBonusClaimed = savedState.dailyBonusClaimed || false;
+        playerNetWorth = savedState.playerNetWorth || 0;
+        ownedPets = savedState.ownedPets || [];
+        equippedPets = savedState.equippedPets || [];
+
+        // Restore passive farms
+        if (savedState.passiveFarms) {
+            savedState.passiveFarms.forEach(id => {
+                const farmElement = document.querySelector(`.passive-farm[data-farm="${id}"]`);
+                if (farmElement) {
+                    farmElement.classList.add('owned');
+                }
+            });
+        }
+        updateResources();
+    }
+}
+
+// Reset Game
+function resetGame(completeReset = true) {
+    // Clear growth timers
+    for (let key in growthTimers) {
+        clearInterval(growthTimers[key]);
+    }
+    growthTimers = {};
+
+    // Clear passive timers
+    for (let key in passiveTimers) {
+        clearInterval(passiveTimers[key]);
+    }
+    passiveTimers = {};
+
+    // Reset variables
+    coins = 0;
+    gems = 0;
+    tokens = 0;
+    growthTimes = {
+        wheat: 5,
+        corn: 8,
+        pumpkin: 12,
+        tomato: 7,
+        carrot: 6
+    };
+    if (completeReset) {
+        achievements = {};
+        completedQuests = [];
+        coinMultiplier = 1;
+        document.querySelectorAll('.passive-farm').forEach(el => el.classList.remove('owned'));
+        ownedPets = [];
+        equippedPets = [];
+        renderPets();
+        localStorage.removeItem('completedTutorial');
+    }
+    updateResources();
+    generateQuests();
+    generateAchievements();
+    renderQuests();
+    renderAchievements();
+    renderBlackMarket();
+    startPassiveIncome();
+}
+
+// Check Daily Bonus
+function checkDailyBonus() {
+    const lastLogin = localStorage.getItem('lastLogin');
+    const today = new Date().toDateString();
+    if (lastLogin !== today && !dailyBonusClaimed) {
+        showDailyBonus();
+        localStorage.setItem('lastLogin', today);
+    }
+}
+
+// Show Daily Bonus
+function showDailyBonus() {
+    gems += 5;
+    showNotification('Daily Bonus! +5 Gems!');
+    dailyBonusClaimed = true;
+    updateResources();
+    saveGame();
+}
+
+// Show Auto-Save Notification
+function showAutoSaveNotification() {
+    setInterval(() => {
+        saveGame();
+        const notification = document.getElementById('auto-save-notification');
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.opacity = '1';
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 500);
+            }, 500);
+        }, 100);
+    }, 10000);
+}
+
+// Keyboard Navigation
+function keyboardNavigation(event) {
+    switch (event.key.toLowerCase()) {
+        case 'c':
+            document.getElementById('crops-section').scrollIntoView({ behavior: 'smooth' });
+            break;
+        case 'a':
+            document.getElementById('animals-section').scrollIntoView({ behavior: 'smooth' });
+            break;
+        case 'u':
+            document.getElementById('upgrades-section').scrollIntoView({ behavior: 'smooth' });
+            break;
+        case 'p':
+            document.getElementById('pets-section').scrollIntoView({ behavior: 'smooth' });
+            break;
+        case 'd':
+            document.getElementById('passive-farms-section').scrollIntoView({ behavior: 'smooth' });
+            break;
+        case 'q':
+            document.getElementById('quests-section').scrollIntoView({ behavior: 'smooth' });
+            break;
+        case 'm':
+            document.getElementById('minigames-section').scrollIntoView({ behavior: 'smooth' });
+            break;
+        default:
+            break;
+    }
+}
+
+// Check and Start Tutorial
+function checkAndStartTutorial() {
+    const hasCompletedTutorial = localStorage.getItem('completedTutorial');
+    if (!hasCompletedTutorial) {
+        startTutorial();
+    }
+}
+
+// Start Tutorial
+function startTutorial() {
+    isTutorialActive = true;
+    tutorialStep = 1;
+    openCustomModal(`
+        <h2>Welcome to Idle Farm!</h2>
+        <p>Let's get you started with a quick tutorial.</p>
+        <button id="nextTutorialButton">Next</button>
+    `);
+    document.getElementById('nextTutorialButton').addEventListener('click', nextTutorialStep);
+}
+
+// Next Tutorial Step
+function nextTutorialStep() {
+    const modalContent = document.getElementById('generic-modal-content');
+    switch (tutorialStep) {
+        case 1:
+            modalContent.innerHTML = `
+                <span class="close">&times;</span>
+                <h2>Harvest Crops</h2>
+                <p>Click on the crops to start growing them. Once grown, collect coins!</p>
+                <button id="nextTutorialButton">Next</button>
+            `;
+            break;
+        case 2:
+            modalContent.innerHTML = `
+                <span class="close">&times;</span>
+                <h2>Raise Animals</h2>
+                <p>Click on animals to produce products. Collect them to earn more coins!</p>
+                <button id="nextTutorialButton">Next</button>
+            `;
+            break;
+        case 3:
+            modalContent.innerHTML = `
+                <span class="close">&times;</span>
+                <h2>Purchase Upgrades</h2>
+                <p>Buy upgrades to enhance your farm's efficiency and increase rewards.</p>
+                <button id="nextTutorialButton">Next</button>
+            `;
+            break;
+        case 4:
+            modalContent.innerHTML = `
+                <span class="close">&times;</span>
+                <h2>Earn Passive Income</h2>
+                <p>Invest in passive farms to generate coins automatically.</p>
+                <button id="nextTutorialButton">Next</button>
+            `;
+            break;
+        case 5:
+            modalContent.innerHTML = `
+                <span class="close">&times;</span>
+                <h2>Complete Quests and Achievements</h2>
+                <p>Complete quests and unlock achievements for rewards.</p>
+                <button id="finishTutorialButton">Finish Tutorial</button>
+            `;
+            break;
+        default:
+            break;
+    }
+    tutorialStep++;
+    if (tutorialStep <= 5) {
+        document.getElementById('nextTutorialButton').addEventListener('click', nextTutorialStep);
+    } else {
+        document.getElementById('finishTutorialButton').addEventListener('click', endTutorial);
+    }
+}
+
+// End Tutorial
+function endTutorial() {
+    closeModal();
+    localStorage.setItem('completedTutorial', true);
+    isTutorialActive = false;
+    showNotification('Tutorial Completed! Enjoy your farming journey!');
+}
+
+// Generate Quests
+function generateQuests() {
+    quests = [
+        { id: 'quest1', description: 'Harvest 10 Wheat', goal: 10, type: 'crop', item: 'wheat', reward: '10 Gems' },
+        { id: 'quest2', description: 'Harvest 20 Corn', goal: 20, type: 'crop', item: 'corn', reward: '20 Gems' }
+    ];
+}
+
+// Check Quests
+function checkQuests(item, type) {
+    quests.forEach(quest => {
+        if (!completedQuests.includes(quest.id)) {
+            if (quest.type === type && quest.item === item) {
+                quest.count = (quest.count || 0) + 1;
+                if (quest.count >= quest.goal) {
+                    completeQuest(quest);
+                }
+            }
+        }
+    });
+}
+
+// Complete Quest
+function completeQuest(quest) {
+    let reward = quest.reward;
+    if (reward.includes('Gems')) {
+        gems += parseInt(reward);
+    } else if (reward.includes('Tokens')) {
+        tokens += parseInt(reward);
+    } else if (reward.includes('Coins')) {
+        coins += parseInt(reward);
+        playerNetWorth += parseInt(reward);
+    }
+    showNotification(`Quest Completed: ${quest.description} +${reward}`);
+    completedQuests.push(quest.id);
+    quests = quests.filter(q => q.id !== quest.id);
+    generateQuests();
+    renderQuests();
+    updateResources();
+    checkAchievements(quest.item, quest.type);
+    saveGame();
+}
+
+// Generate Achievements
+function generateAchievements() {
+    const achievementList = [
+        { id: 'ach1', description: 'Harvest 10 Wheat', goal: 10, type: 'crop', item: 'wheat', reward: '10 Gems' },
+        { id: 'ach2', description: 'Harvest 50 Corn', goal: 50, type: 'crop', item: 'corn', reward: '20 Gems' }
+    ];
+    achievementList.forEach(ach => {
+        if (!achievements[ach.id]) {
+            achievements[ach.id] = { ...ach, achieved: false, count: 0 };
+        }
+    });
+}
+
+// Check Achievements
+function checkAchievements(item, type) {
+    for (let key in achievements) {
+        let ach = achievements[key];
+        if (!ach.achieved && ach.type === type && ach.item === item) {
+            ach.count += 1;
+            if (ach.count >= ach.goal) {
+                ach.achieved = true;
+                if (ach.reward.includes('Gems')) {
+                    gems += parseInt(ach.reward);
+                }
+                showNotification(`Achievement Unlocked: ${ach.description} +${ach.reward}`);
+            }
+        }
+    }
+    renderAchievements();
+    updateResources();
+}
+
+// Get Animal Name
+function getAnimalName(emoji) {
+    const map = {
+        '🐶': 'dog',
+        '🐱': 'cat',
+        '🦊': 'fox',
+        '🐰': 'rabbit',
+        '🐻': 'bear'
+    };
+    return map[emoji] || 'animal';
+}
+  </script>
+</body>
+</html>
