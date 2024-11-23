@@ -6,7 +6,7 @@
     <title>Tamagotchi Game v1.4</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background: linear-gradient(to bottom, #e0f7fa, #80deea);
             margin: 0;
             text-align: center;
@@ -20,7 +20,6 @@
             background: #ffffff;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            position: relative;
         }
         h1 {
             font-size: 2.5em;
@@ -69,6 +68,21 @@
             max-width: 500px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+        .dark-mode {
+            background: #333;
+            color: white;
+        }
+        .dark-mode .game-container {
+            background: #444;
+            border-color: #555;
+        }
+        .dark-mode button {
+            background: #555;
+            color: white;
+        }
+        .dark-mode button:hover {
+            background: #333;
+        }
     </style>
 </head>
 <body>
@@ -97,6 +111,7 @@
             <button onclick="toggleMenu()">Mini-Games</button>
             <button onclick="saveGame()">Save</button>
             <button onclick="loadGame()">Load</button>
+            <button onclick="toggleDarkMode()">Dark Mode</button>
             <button onclick="resetGame()">Restart</button>
         </div>
         <p id="message"></p>
@@ -109,49 +124,37 @@
         <button onclick="closeMenu()">Close Menu</button>
     </div>
     <script>
-        const stats = {
+        const stats = JSON.parse(localStorage.getItem("tamagotchiStats")) || {
             hunger: 100,
             happiness: 100,
             hygiene: 100,
             age: 0,
-            stage: "Baby"
+            stage: "Baby",
         };
 
         const stages = [
             { name: "Baby", emoji: "🐣", age: 0 },
             { name: "Child", emoji: "🐥", age: 5 },
             { name: "Teen", emoji: "🐤", age: 10 },
-            { name: "Adult", emoji: "🐔", age: 20 }
+            { name: "Adult", emoji: "🐔", age: 20 },
         ];
+
+        const darkModeEnabled = JSON.parse(localStorage.getItem("darkMode")) || false;
+
+        if (darkModeEnabled) {
+            document.body.classList.add("dark-mode");
+        }
 
         function updateUI() {
             document.getElementById("hunger-bar").style.width = `${stats.hunger}%`;
             document.getElementById("happiness-bar").style.width = `${stats.happiness}%`;
             document.getElementById("hygiene-bar").style.width = `${stats.hygiene}%`;
-            const currentStage = stages.find(stage => stats.age >= stage.age);
-            if (currentStage.name !== stats.stage) {
-                stats.stage = currentStage.name;
-                document.getElementById("tamagotchi").textContent = currentStage.emoji;
-                document.getElementById("stage").textContent = currentStage.name;
+            const stage = stages.find(s => stats.age >= s.age);
+            if (stage.name !== stats.stage) {
+                stats.stage = stage.name;
+                document.getElementById("tamagotchi").textContent = stage.emoji;
+                document.getElementById("stage").textContent = stage.name;
             }
-        }
-
-        function feed() {
-            stats.hunger = Math.min(100, stats.hunger + 10);
-            showMessage("You fed your Tamagotchi!");
-            updateUI();
-        }
-
-        function play() {
-            stats.happiness = Math.min(100, stats.happiness + 10);
-            showMessage("Your Tamagotchi is happy!");
-            updateUI();
-        }
-
-        function clean() {
-            stats.hygiene = Math.min(100, stats.hygiene + 20);
-            showMessage("Your Tamagotchi is clean!");
-            updateUI();
         }
 
         function showMessage(message) {
@@ -159,6 +162,11 @@
             setTimeout(() => {
                 document.getElementById("message").textContent = "";
             }, 3000);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem("darkMode", JSON.stringify(document.body.classList.contains("dark-mode")));
         }
 
         function toggleMenu() {
@@ -170,26 +178,45 @@
             document.getElementById("menu").style.display = "none";
         }
 
+        function feed() {
+            stats.hunger = Math.min(100, stats.hunger + 20);
+            showMessage("You fed your Tamagotchi!");
+            updateUI();
+        }
+
+        function play() {
+            stats.happiness = Math.min(100, stats.happiness + 15);
+            showMessage("You played with your Tamagotchi!");
+            updateUI();
+        }
+
+        function clean() {
+            stats.hygiene = Math.min(100, stats.hygiene + 25);
+            showMessage("Your Tamagotchi is clean!");
+            updateUI();
+        }
+
         function startGuessNumber() {
             const number = Math.floor(Math.random() * 10) + 1;
-            let guess = null;
+            let guess;
+            let attempts = 0;
             while (guess !== number) {
                 guess = parseInt(prompt("Guess the number (1-10):"));
                 if (guess === number) {
-                    showMessage("Correct! +10 Happiness");
-                    stats.happiness = Math.min(100, stats.happiness + 10);
+                    showMessage(`Correct! Attempts: ${attempts}`);
+                    stats.happiness = Math.min(100, stats.happiness + 15);
                 } else if (guess > number) {
-                    showMessage("Too high! Try again.");
+                    showMessage("Too high!");
                 } else {
-                    showMessage("Too low! Try again.");
+                    showMessage("Too low!");
                 }
+                attempts++;
             }
             updateUI();
         }
 
         function startMemoryGame() {
             let sequence = [];
-            let userSequence = [];
             const colors = ["Red", "Blue", "Green", "Yellow"];
 
             function generateSequence() {
@@ -197,24 +224,22 @@
             }
 
             function showSequence() {
-                alert(`Sequence: ${sequence.join(", ")}`);
+                alert("Sequence: " + sequence.join(", "));
             }
 
             function getUserSequence() {
-                userSequence = prompt("Repeat the sequence (comma-separated colors):").split(",").map(s => s.trim());
+                return prompt("Enter the sequence (comma-separated):").split(", ");
             }
 
             generateSequence();
             showSequence();
-            getUserSequence();
-
+            const userSequence = getUserSequence();
             if (JSON.stringify(userSequence) === JSON.stringify(sequence)) {
-                showMessage("Correct! +10 Happiness");
+                showMessage("Correct!");
                 stats.happiness = Math.min(100, stats.happiness + 10);
             } else {
-                showMessage("Incorrect sequence! Game Over.");
+                showMessage("Incorrect sequence!");
             }
-
             updateUI();
         }
 
@@ -228,13 +253,13 @@
                     score++;
                 } else {
                     document.removeEventListener("click", clickHandler);
-                    showMessage(`Time's up! Score: ${score}. +${score} Happiness`);
+                    showMessage(`Time's up! Score: ${score}`);
                     stats.happiness = Math.min(100, stats.happiness + score);
                     updateUI();
                 }
             }
 
-            showMessage("Click as fast as you can for 5 seconds!");
+            showMessage("Click as fast as you can!");
             document.addEventListener("click", clickHandler);
         }
 
@@ -250,7 +275,7 @@
                 updateUI();
                 showMessage("Game loaded!");
             } else {
-                showMessage("No saved game found!");
+                showMessage("No saved game found.");
             }
         }
 
@@ -260,15 +285,15 @@
                 happiness: 100,
                 hygiene: 100,
                 age: 0,
-                stage: "Baby"
+                stage: "Baby",
             });
             updateUI();
             showMessage("Game restarted!");
         }
 
         setInterval(() => {
-            stats.hunger = Math.max(0, stats.hunger - 2);
-            stats.happiness = Math.max(0, stats.happiness - 1);
+            stats.hunger = Math.max(0, stats.hunger - 5);
+            stats.happiness = Math.max(0, stats.happiness - 2);
             stats.hygiene = Math.max(0, stats.hygiene - 3);
             stats.age += 0.1;
             updateUI();
