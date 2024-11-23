@@ -3,311 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamagotchi Game v1.2</title>
+    <title>Tamagotchi Game v1.4</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
+            font-family: Arial, sans-serif;
             background: linear-gradient(to bottom, #e0f7fa, #80deea);
             margin: 0;
+            text-align: center;
             padding: 0;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            transition: background-color 0.5s ease;
         }
         .game-container {
             max-width: 900px;
             margin: 30px auto;
             padding: 20px;
             background: #ffffff;
-            border: 2px solid #000;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             position: relative;
         }
         h1 {
             font-size: 2.5em;
-            margin-bottom: 10px;
             color: #00796b;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
         }
-        .credits {
-            font-size: 1em;
-            margin-bottom: 15px;
-        }
-        .credits a {
-            color: #00796b;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        .credits a:hover {
-            text-decoration: underline;
-        }
-        #tamagotchi {
-            font-size: 120px;
-            margin: 20px 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-        }
-        .stats {
+        .stats, .stat-bar {
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap;
-            margin: 20px auto;
         }
-        .stats div {
-            width: 140px;
-            margin: 10px;
-        }
-        .stat-bar {
+        .stat-bar div {
             background: #ddd;
-            border-radius: 10px;
             height: 15px;
+            border-radius: 5px;
             overflow: hidden;
-            position: relative;
+            margin: 5px 0;
         }
         .bar-fill {
             height: 100%;
             background: #4caf50;
-            transition: width 0.3s ease-in-out;
+            transition: width 0.3s;
         }
         button {
             padding: 12px 18px;
-            font-size: 1em;
-            margin: 8px;
-            cursor: pointer;
-            border: none;
+            margin: 10px;
             border-radius: 5px;
+            border: none;
             background: #00796b;
             color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: background 0.3s, transform 0.2s ease;
+            font-size: 16px;
+            cursor: pointer;
         }
         button:hover {
-            background: #005b4f;
-            transform: translateY(-2px);
+            background: #005f57;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 1.2em;
         }
         .menu {
-            background: #ffffff;
+            display: none;
+            background: white;
             border: 2px solid #00796b;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
+            padding: 20px;
             margin: 20px auto;
-            padding: 15px;
-            display: none;
-        }
-        .message {
-            font-size: 1.2em;
-            color: #333;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 0.9em;
-        }
-        .footer a {
-            color: #00796b;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        .version {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            font-size: 0.8em;
-            color: gray;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
-    <div class="credits">
-        <a href="https://sites.google.com/view/staticquasar931" target="_blank">
-            Made by Static Inspired by Colt
-        </a>
-    </div>
     <div class="game-container">
         <h1>Tamagotchi Game</h1>
-        <div id="tamagotchi">🐣</div>
+        <div id="tamagotchi" style="font-size: 100px;">🐣</div>
         <p>Stage: <span id="stage">Baby</span></p>
         <div class="stats">
             <div>
                 Hunger
-                <div class="stat-bar">
-                    <div id="hunger-bar" class="bar-fill"></div>
-                </div>
+                <div class="stat-bar"><div id="hunger-bar" class="bar-fill"></div></div>
             </div>
             <div>
                 Happiness
-                <div class="stat-bar">
-                    <div id="happiness-bar" class="bar-fill"></div>
-                </div>
-            </div>
-            <div>
-                Discipline
-                <div class="stat-bar">
-                    <div id="discipline-bar" class="bar-fill"></div>
-                </div>
-            </div>
-            <div>
-                Health
-                <div class="stat-bar">
-                    <div id="health-bar" class="bar-fill"></div>
-                </div>
+                <div class="stat-bar"><div id="happiness-bar" class="bar-fill"></div></div>
             </div>
             <div>
                 Hygiene
-                <div class="stat-bar">
-                    <div id="hygiene-bar" class="bar-fill"></div>
-                </div>
+                <div class="stat-bar"><div id="hygiene-bar" class="bar-fill"></div></div>
             </div>
         </div>
         <div>
             <button onclick="feed()">Feed</button>
-            <button onclick="heal()">Heal</button>
-            <button onclick="rest()">Rest</button>
+            <button onclick="play()">Play</button>
             <button onclick="clean()">Clean</button>
-            <button onclick="toggleDarkMode()">Dark Mode</button>
-            <button onclick="openMenu()">Menu</button>
+            <button onclick="toggleMenu()">Mini-Games</button>
+            <button onclick="saveGame()">Save</button>
+            <button onclick="loadGame()">Load</button>
             <button onclick="resetGame()">Restart</button>
         </div>
-        <p class="message" id="message"></p>
+        <p id="message"></p>
     </div>
     <div class="menu" id="menu">
-        <h2>Menu</h2>
-        <p>Choose an action or mini-game to play!</p>
-        <button onclick="startGuessNumberGame()">Guess the Number</button>
+        <h2>Mini-Games</h2>
+        <button onclick="startGuessNumber()">Guess the Number</button>
         <button onclick="startMemoryGame()">Memory Game</button>
         <button onclick="startClickerGame()">Clicker Game</button>
-        <button onclick="saveGame()">Save Game</button>
-        <button onclick="loadGame()">Load Game</button>
         <button onclick="closeMenu()">Close Menu</button>
     </div>
-    <div class="footer">
-        <p>
-            Made by <a href="https://sites.google.com/view/staticquasar931" target="_blank">Static</a>.
-            Inspired by <a href="https://sites.google.com/view/staticquasar931" target="_blank">Colt</a>.
-        </p>
-    </div>
-    <div class="version">Version 1.2</div>
     <script>
-        // Game logic with fully functional main game and mini-games
-
-        // Game state
-        const stats = JSON.parse(localStorage.getItem("tamagotchiState")) || {
+        const stats = {
             hunger: 100,
             happiness: 100,
-            discipline: 100,
-            health: 100,
             hygiene: 100,
             age: 0,
-            stage: "Baby",
+            stage: "Baby"
         };
 
         const stages = [
             { name: "Baby", emoji: "🐣", age: 0 },
             { name: "Child", emoji: "🐥", age: 5 },
             { name: "Teen", emoji: "🐤", age: 10 },
-            { name: "Adult", emoji: "🐔", age: 20 },
+            { name: "Adult", emoji: "🐔", age: 20 }
         ];
 
-        const tamagotchiElem = document.getElementById("tamagotchi");
-        const stageElem = document.getElementById("stage");
-        const messageElem = document.getElementById("message");
-
-        const bars = {
-            hunger: document.getElementById("hunger-bar"),
-            happiness: document.getElementById("happiness-bar"),
-            discipline: document.getElementById("discipline-bar"),
-            health: document.getElementById("health-bar"),
-            hygiene: document.getElementById("hygiene-bar"),
-        };
-
-        function updateBars() {
-            for (let key in bars) {
-                bars[key].style.width = `${stats[key]}%`;
-                bars[key].style.backgroundColor =
-                    stats[key] > 50 ? "#4caf50" : stats[key] > 25 ? "#ffeb3b" : "#f44336";
+        function updateUI() {
+            document.getElementById("hunger-bar").style.width = `${stats.hunger}%`;
+            document.getElementById("happiness-bar").style.width = `${stats.happiness}%`;
+            document.getElementById("hygiene-bar").style.width = `${stats.hygiene}%`;
+            const currentStage = stages.find(stage => stats.age >= stage.age);
+            if (currentStage.name !== stats.stage) {
+                stats.stage = currentStage.name;
+                document.getElementById("tamagotchi").textContent = currentStage.emoji;
+                document.getElementById("stage").textContent = currentStage.name;
             }
         }
 
-        function evolve() {
-            const nextStage = stages.find((s) => stats.age >= s.age && stats.stage !== s.name);
-            if (nextStage) {
-                stats.stage = nextStage.name;
-                tamagotchiElem.textContent = nextStage.emoji;
-                stageElem.textContent = stats.stage;
-                messageElem.textContent = `Your Tamagotchi evolved into a ${stats.stage}!`;
-            }
+        function feed() {
+            stats.hunger = Math.min(100, stats.hunger + 10);
+            showMessage("You fed your Tamagotchi!");
+            updateUI();
         }
 
-        function saveGame() {
-            localStorage.setItem("tamagotchiState", JSON.stringify(stats));
-            messageElem.textContent = "Game progress saved!";
+        function play() {
+            stats.happiness = Math.min(100, stats.happiness + 10);
+            showMessage("Your Tamagotchi is happy!");
+            updateUI();
         }
 
-        function loadGame() {
-            const savedState = JSON.parse(localStorage.getItem("tamagotchiState"));
-            if (savedState) {
-                Object.assign(stats, savedState);
-                updateBars();
-                evolve();
-                messageElem.textContent = "Game progress loaded!";
-            } else {
-                messageElem.textContent = "No saved progress found!";
-            }
+        function clean() {
+            stats.hygiene = Math.min(100, stats.hygiene + 20);
+            showMessage("Your Tamagotchi is clean!");
+            updateUI();
         }
 
-        function resetGame() {
-            if (confirm("Are you sure you want to restart the game?")) {
-                Object.assign(stats, {
-                    hunger: 100,
-                    happiness: 100,
-                    discipline: 100,
-                    health: 100,
-                    hygiene: 100,
-                    age: 0,
-                    stage: "Baby",
-                });
-                updateBars();
-                evolve();
-                messageElem.textContent = "Game restarted!";
-            }
+        function showMessage(message) {
+            document.getElementById("message").textContent = message;
+            setTimeout(() => {
+                document.getElementById("message").textContent = "";
+            }, 3000);
         }
 
-        // Mini-games
-        function startGuessNumberGame() {
+        function toggleMenu() {
+            const menu = document.getElementById("menu");
+            menu.style.display = menu.style.display === "none" || menu.style.display === "" ? "block" : "none";
+        }
+
+        function closeMenu() {
+            document.getElementById("menu").style.display = "none";
+        }
+
+        function startGuessNumber() {
             const number = Math.floor(Math.random() * 10) + 1;
             let guess = null;
-            let attempts = 0;
-
             while (guess !== number) {
-                guess = parseInt(prompt("Guess a number between 1 and 10:"), 10);
-                if (isNaN(guess)) {
-                    alert("Please enter a valid number.");
-                    continue;
-                }
-                attempts++;
+                guess = parseInt(prompt("Guess the number (1-10):"));
                 if (guess === number) {
-                    alert(`Correct! It took you ${attempts} attempts.`);
-                    stats.happiness = Math.min(100, stats.happiness + 15);
-                    updateBars();
-                    break;
+                    showMessage("Correct! +10 Happiness");
+                    stats.happiness = Math.min(100, stats.happiness + 10);
                 } else if (guess > number) {
-                    alert("Too high! Try again.");
+                    showMessage("Too high! Try again.");
                 } else {
-                    alert("Too low! Try again.");
+                    showMessage("Too low! Try again.");
                 }
             }
+            updateUI();
         }
 
         function startMemoryGame() {
             let sequence = [];
             let userSequence = [];
-            let level = 1;
+            const colors = ["Red", "Blue", "Green", "Yellow"];
 
             function generateSequence() {
-                sequence.push(Math.floor(Math.random() * 4));
+                sequence.push(colors[Math.floor(Math.random() * colors.length)]);
             }
 
             function showSequence() {
@@ -315,71 +201,80 @@
             }
 
             function getUserSequence() {
-                const input = prompt("Repeat the sequence (comma-separated numbers):");
-                userSequence = input.split(",").map(Number);
+                userSequence = prompt("Repeat the sequence (comma-separated colors):").split(",").map(s => s.trim());
             }
 
-            while (true) {
-                generateSequence();
-                showSequence();
-                getUserSequence();
+            generateSequence();
+            showSequence();
+            getUserSequence();
 
-                if (JSON.stringify(userSequence) === JSON.stringify(sequence)) {
-                    alert("Correct!");
-                    stats.discipline = Math.min(100, stats.discipline + 10);
-                    level++;
-                    updateBars();
-                } else {
-                    alert("Incorrect! Game over.");
-                    break;
-                }
+            if (JSON.stringify(userSequence) === JSON.stringify(sequence)) {
+                showMessage("Correct! +10 Happiness");
+                stats.happiness = Math.min(100, stats.happiness + 10);
+            } else {
+                showMessage("Incorrect sequence! Game Over.");
             }
+
+            updateUI();
         }
 
         function startClickerGame() {
             let score = 0;
-            const duration = 5000; // 5 seconds
-            const startTime = Date.now();
+            const duration = 5000;
+            const endTime = Date.now() + duration;
 
             function clickHandler() {
-                if (Date.now() - startTime < duration) {
+                if (Date.now() < endTime) {
                     score++;
-                    messageElem.textContent = `Score: ${score}`;
                 } else {
                     document.removeEventListener("click", clickHandler);
-                    alert(`Time's up! Your score: ${score}`);
+                    showMessage(`Time's up! Score: ${score}. +${score} Happiness`);
                     stats.happiness = Math.min(100, stats.happiness + score);
-                    updateBars();
+                    updateUI();
                 }
             }
 
-            alert("Click as fast as you can! You have 5 seconds.");
+            showMessage("Click as fast as you can for 5 seconds!");
             document.addEventListener("click", clickHandler);
         }
 
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
+        function saveGame() {
+            localStorage.setItem("tamagotchiStats", JSON.stringify(stats));
+            showMessage("Game saved!");
         }
 
-        function openMenu() {
-            document.getElementById("menu").style.display = "block";
+        function loadGame() {
+            const savedStats = JSON.parse(localStorage.getItem("tamagotchiStats"));
+            if (savedStats) {
+                Object.assign(stats, savedStats);
+                updateUI();
+                showMessage("Game loaded!");
+            } else {
+                showMessage("No saved game found!");
+            }
         }
 
-        function closeMenu() {
-            document.getElementById("menu").style.display = "none";
+        function resetGame() {
+            Object.assign(stats, {
+                hunger: 100,
+                happiness: 100,
+                hygiene: 100,
+                age: 0,
+                stage: "Baby"
+            });
+            updateUI();
+            showMessage("Game restarted!");
         }
 
         setInterval(() => {
             stats.hunger = Math.max(0, stats.hunger - 2);
             stats.happiness = Math.max(0, stats.happiness - 1);
-            stats.hygiene = Math.max(0, stats.hygiene - 1);
-            stats.age += 0.05;
-            evolve();
-            updateBars();
+            stats.hygiene = Math.max(0, stats.hygiene - 3);
+            stats.age += 0.1;
+            updateUI();
         }, 5000);
 
-        // Initialize game
-        updateBars();
+        updateUI();
     </script>
 </body>
 </html>
