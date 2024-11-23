@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamagotchi Game v1.4</title>
+    <title>Tamagotchi Game v1.5</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(to bottom, #e0f7fa, #80deea);
             margin: 0;
             text-align: center;
@@ -28,18 +28,18 @@
         .stats, .stat-bar {
             display: flex;
             justify-content: space-between;
+            margin: 15px 0;
         }
-        .stat-bar div {
+        .stat-bar {
+            width: 100%;
             background: #ddd;
             height: 15px;
             border-radius: 5px;
             overflow: hidden;
-            margin: 5px 0;
         }
         .bar-fill {
             height: 100%;
-            background: #4caf50;
-            transition: width 0.3s;
+            transition: width 0.3s, background-color 0.3s;
         }
         button {
             padding: 12px 18px;
@@ -58,7 +58,7 @@
             margin-top: 20px;
             font-size: 1.2em;
         }
-        .menu {
+        .mini-game-container, .menu {
             display: none;
             background: white;
             border: 2px solid #00796b;
@@ -123,6 +123,11 @@
         <button onclick="startClickerGame()">Clicker Game</button>
         <button onclick="closeMenu()">Close Menu</button>
     </div>
+    <div class="mini-game-container" id="miniGameContainer">
+        <h2 id="miniGameTitle">Mini-Game</h2>
+        <div id="miniGameContent"></div>
+        <button onclick="quitMiniGame()">Quit Game</button>
+    </div>
     <script>
         const stats = JSON.parse(localStorage.getItem("tamagotchiStats")) || {
             hunger: 100,
@@ -145,10 +150,21 @@
             document.body.classList.add("dark-mode");
         }
 
+        let miniGameActive = false;
+
         function updateUI() {
-            document.getElementById("hunger-bar").style.width = `${stats.hunger}%`;
-            document.getElementById("happiness-bar").style.width = `${stats.happiness}%`;
-            document.getElementById("hygiene-bar").style.width = `${stats.hygiene}%`;
+            const hungerBar = document.getElementById("hunger-bar");
+            hungerBar.style.width = `${stats.hunger}%`;
+            hungerBar.style.backgroundColor = stats.hunger > 50 ? "#4caf50" : stats.hunger > 25 ? "#ffeb3b" : "#f44336";
+
+            const happinessBar = document.getElementById("happiness-bar");
+            happinessBar.style.width = `${stats.happiness}%`;
+            happinessBar.style.backgroundColor = stats.happiness > 50 ? "#4caf50" : stats.happiness > 25 ? "#ffeb3b" : "#f44336";
+
+            const hygieneBar = document.getElementById("hygiene-bar");
+            hygieneBar.style.width = `${stats.hygiene}%`;
+            hygieneBar.style.backgroundColor = stats.hygiene > 50 ? "#4caf50" : stats.hygiene > 25 ? "#ffeb3b" : "#f44336";
+
             const stage = stages.find(s => stats.age >= s.age);
             if (stage.name !== stats.stage) {
                 stats.stage = stage.name;
@@ -158,9 +174,10 @@
         }
 
         function showMessage(message) {
-            document.getElementById("message").textContent = message;
+            const messageElem = document.getElementById("message");
+            messageElem.textContent = message;
             setTimeout(() => {
-                document.getElementById("message").textContent = "";
+                messageElem.textContent = "";
             }, 3000);
         }
 
@@ -176,6 +193,12 @@
 
         function closeMenu() {
             document.getElementById("menu").style.display = "none";
+        }
+
+        function quitMiniGame() {
+            miniGameActive = false;
+            document.getElementById("miniGameContainer").style.display = "none";
+            updateUI();
         }
 
         function feed() {
@@ -197,26 +220,44 @@
         }
 
         function startGuessNumber() {
+            if (miniGameActive) return;
+            miniGameActive = true;
             const number = Math.floor(Math.random() * 10) + 1;
-            let guess;
             let attempts = 0;
-            while (guess !== number) {
-                guess = parseInt(prompt("Guess the number (1-10):"));
-                if (guess === number) {
+            let userInput;
+
+            function renderGame() {
+                document.getElementById("miniGameTitle").textContent = "Guess the Number";
+                document.getElementById("miniGameContent").innerHTML = `
+                    <p>Guess a number between 1 and 10.</p>
+                    <input id="guessInput" type="number" placeholder="Enter your guess" />
+                    <button onclick="submitGuess()">Submit</button>
+                `;
+                document.getElementById("miniGameContainer").style.display = "block";
+            }
+
+            window.submitGuess = function () {
+                userInput = parseInt(document.getElementById("guessInput").value);
+                attempts++;
+                if (userInput === number) {
                     showMessage(`Correct! Attempts: ${attempts}`);
-                    stats.happiness = Math.min(100, stats.happiness + 15);
-                } else if (guess > number) {
+                    stats.happiness = Math.min(100, stats.happiness + 10);
+                    quitMiniGame();
+                } else if (userInput > number) {
                     showMessage("Too high!");
                 } else {
                     showMessage("Too low!");
                 }
-                attempts++;
-            }
-            updateUI();
+            };
+
+            renderGame();
         }
 
         function startMemoryGame() {
+            if (miniGameActive) return;
+            miniGameActive = true;
             let sequence = [];
+            let userSequence = [];
             const colors = ["Red", "Blue", "Green", "Yellow"];
 
             function generateSequence() {
@@ -224,26 +265,40 @@
             }
 
             function showSequence() {
-                alert("Sequence: " + sequence.join(", "));
+                const content = sequence.join(", ");
+                document.getElementById("miniGameContent").innerHTML = `
+                    <p>Memorize the sequence: ${content}</p>
+                    <button onclick="proceedToInput()">Continue</button>
+                `;
             }
 
-            function getUserSequence() {
-                return prompt("Enter the sequence (comma-separated):").split(", ");
+            function proceedToInput() {
+                document.getElementById("miniGameContent").innerHTML = `
+                    <p>Enter the sequence (comma-separated):</p>
+                    <input id="sequenceInput" type="text" />
+                    <button onclick="submitSequence()">Submit</button>
+                `;
             }
+
+            window.submitSequence = function () {
+                userSequence = document.getElementById("sequenceInput").value.split(",").map(s => s.trim());
+                if (JSON.stringify(userSequence) === JSON.stringify(sequence)) {
+                    showMessage("Correct!");
+                    stats.happiness = Math.min(100, stats.happiness + 10);
+                    quitMiniGame();
+                } else {
+                    showMessage("Incorrect sequence!");
+                    quitMiniGame();
+                }
+            };
 
             generateSequence();
             showSequence();
-            const userSequence = getUserSequence();
-            if (JSON.stringify(userSequence) === JSON.stringify(sequence)) {
-                showMessage("Correct!");
-                stats.happiness = Math.min(100, stats.happiness + 10);
-            } else {
-                showMessage("Incorrect sequence!");
-            }
-            updateUI();
         }
 
         function startClickerGame() {
+            if (miniGameActive) return;
+            miniGameActive = true;
             let score = 0;
             const duration = 5000;
             const endTime = Date.now() + duration;
@@ -251,15 +306,19 @@
             function clickHandler() {
                 if (Date.now() < endTime) {
                     score++;
+                    document.getElementById("miniGameContent").textContent = `Score: ${score}`;
                 } else {
                     document.removeEventListener("click", clickHandler);
                     showMessage(`Time's up! Score: ${score}`);
                     stats.happiness = Math.min(100, stats.happiness + score);
-                    updateUI();
+                    quitMiniGame();
                 }
             }
 
-            showMessage("Click as fast as you can!");
+            document.getElementById("miniGameTitle").textContent = "Clicker Game";
+            document.getElementById("miniGameContent").textContent = "Click as fast as you can!";
+            document.getElementById("miniGameContainer").style.display = "block";
+
             document.addEventListener("click", clickHandler);
         }
 
@@ -292,11 +351,13 @@
         }
 
         setInterval(() => {
-            stats.hunger = Math.max(0, stats.hunger - 5);
-            stats.happiness = Math.max(0, stats.happiness - 2);
-            stats.hygiene = Math.max(0, stats.hygiene - 3);
-            stats.age += 0.1;
-            updateUI();
+            if (!miniGameActive) {
+                stats.hunger = Math.max(0, stats.hunger - 5);
+                stats.happiness = Math.max(0, stats.happiness - 2);
+                stats.hygiene = Math.max(0, stats.hygiene - 3);
+                stats.age += 0.1;
+                updateUI();
+            }
         }, 5000);
 
         updateUI();
