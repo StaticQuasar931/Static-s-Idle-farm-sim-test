@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamagotchi Game</title>
+    <title>Advanced Tamagotchi Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
             transition: background-color 0.5s ease;
         }
         .game-container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 50px auto;
             padding: 20px;
             background: #ffffff;
@@ -29,6 +29,7 @@
         #tamagotchi {
             font-size: 120px;
             margin: 20px 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
         }
         .stats {
             display: flex;
@@ -70,6 +71,25 @@
             color: #333;
             margin-top: 15px;
         }
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            font-size: 0.9em;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.75) transparent transparent transparent;
+        }
         .dark-mode {
             background-color: #333;
             color: white;
@@ -79,28 +99,38 @@
 <body>
     <div class="game-container">
         <h1>Tamagotchi</h1>
-        <div id="tamagotchi">🐣</div>
+        <div id="tamagotchi" title="Your Tamagotchi is happy!">🐣</div>
         <p>Stage: <span id="stage">Baby</span></p>
         <div class="stats">
             <div>
                 Hunger
-                <div class="stat-bar"><div id="hunger-bar" class="bar-fill"></div></div>
+                <div class="stat-bar" title="How hungry your Tamagotchi is">
+                    <div id="hunger-bar" class="bar-fill"></div>
+                </div>
             </div>
             <div>
                 Happiness
-                <div class="stat-bar"><div id="happiness-bar" class="bar-fill"></div></div>
+                <div class="stat-bar" title="How happy your Tamagotchi is">
+                    <div id="happiness-bar" class="bar-fill"></div>
+                </div>
             </div>
             <div>
                 Discipline
-                <div class="stat-bar"><div id="discipline-bar" class="bar-fill"></div></div>
+                <div class="stat-bar" title="How disciplined your Tamagotchi is">
+                    <div id="discipline-bar" class="bar-fill"></div>
+                </div>
             </div>
             <div>
                 Health
-                <div class="stat-bar"><div id="health-bar" class="bar-fill"></div></div>
+                <div class="stat-bar" title="How healthy your Tamagotchi is">
+                    <div id="health-bar" class="bar-fill"></div>
+                </div>
             </div>
             <div>
                 Hygiene
-                <div class="stat-bar"><div id="hygiene-bar" class="bar-fill"></div></div>
+                <div class="stat-bar" title="How clean your Tamagotchi is">
+                    <div id="hygiene-bar" class="bar-fill"></div>
+                </div>
             </div>
         </div>
         <div>
@@ -196,7 +226,7 @@
 
         function clean() {
             stats.hygiene = 100;
-            messageElem.textContent = 'Your Tamagotchi is clean!';
+            messageElem.textContent = 'You cleaned your Tamagotchi!';
             saveProgress();
             updateBars();
         }
