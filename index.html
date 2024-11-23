@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamagotchi Game v0.7</title>
+    <title>Tamagotchi Game v1.0</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -187,10 +187,158 @@
             Inspired by <a href="https://sites.google.com/view/staticquasar931" target="_blank">Colt</a>.
         </p>
     </div>
-    <div class="version">Version 0.7</div>
+    <div class="version">Version 1.0</div>
     <script>
-        // Full game logic, mini-games, and optimizations go here.
-        // Includes fixes for all bugs and enhanced features.
+        // Core stats and state management
+        const stats = {
+            hunger: 100,
+            happiness: 100,
+            discipline: 100,
+            health: 100,
+            hygiene: 100,
+            age: 0,
+            stage: "Baby",
+        };
+
+        const stages = [
+            { name: "Baby", emoji: "🐣", age: 0 },
+            { name: "Child", emoji: "🐥", age: 5 },
+            { name: "Teen", emoji: "🐤", age: 10 },
+            { name: "Adult", emoji: "🐔", age: 20 },
+        ];
+
+        const bars = {
+            hunger: document.getElementById("hunger-bar"),
+            happiness: document.getElementById("happiness-bar"),
+            discipline: document.getElementById("discipline-bar"),
+            health: document.getElementById("health-bar"),
+            hygiene: document.getElementById("hygiene-bar"),
+        };
+
+        const tamagotchiElem = document.getElementById("tamagotchi");
+        const stageElem = document.getElementById("stage");
+        const messageElem = document.getElementById("message");
+
+        // Update stat bars and stage
+        function updateBars() {
+            for (let key in bars) {
+                bars[key].style.width = `${stats[key]}%`;
+                bars[key].style.backgroundColor =
+                    stats[key] > 50 ? "#4caf50" : stats[key] > 25 ? "#ffeb3b" : "#f44336";
+            }
+        }
+
+        function evolve() {
+            const nextStage = stages.find((s) => stats.age >= s.age && stats.stage !== s.name);
+            if (nextStage) {
+                stats.stage = nextStage.name;
+                tamagotchiElem.textContent = nextStage.emoji;
+                stageElem.textContent = stats.stage;
+                messageElem.textContent = `Your Tamagotchi evolved into a ${stats.stage}!`;
+            }
+        }
+
+        // Actions
+        function feed() {
+            stats.hunger = Math.min(100, stats.hunger + 20);
+            stats.happiness = Math.min(100, stats.happiness + 5);
+            messageElem.textContent = "You fed your Tamagotchi!";
+            updateBars();
+        }
+
+        function heal() {
+            stats.health = Math.min(100, stats.health + 15);
+            stats.happiness = Math.min(100, stats.happiness + 5);
+            messageElem.textContent = "Your Tamagotchi feels better!";
+            updateBars();
+        }
+
+        function rest() {
+            stats.happiness = Math.min(100, stats.happiness + 10);
+            stats.health = Math.min(100, stats.health + 5);
+            stats.hygiene = Math.max(0, stats.hygiene - 10);
+            messageElem.textContent = "Your Tamagotchi is resting!";
+            updateBars();
+        }
+
+        function clean() {
+            stats.hygiene = 100;
+            messageElem.textContent = "Your Tamagotchi is clean!";
+            updateBars();
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        function resetGame() {
+            if (confirm("Are you sure you want to restart the game?")) {
+                Object.assign(stats, {
+                    hunger: 100,
+                    happiness: 100,
+                    discipline: 100,
+                    health: 100,
+                    hygiene: 100,
+                    age: 0,
+                    stage: "Baby",
+                });
+                updateBars();
+                evolve();
+                messageElem.textContent = "Game restarted!";
+            }
+        }
+
+        // Mini-Games
+        function startGuessNumberGame() {
+            const number = Math.floor(Math.random() * 10) + 1;
+            let guess = null;
+            let attempts = 0;
+            while (guess !== number) {
+                guess = parseInt(prompt("Guess a number between 1 and 10:"), 10);
+                if (isNaN(guess)) {
+                    alert("Please enter a valid number.");
+                    continue;
+                }
+                attempts++;
+                if (guess === number) {
+                    alert(`Correct! It took you ${attempts} attempts.`);
+                    stats.happiness = Math.min(100, stats.happiness + 15);
+                    break;
+                } else if (guess > number) {
+                    alert("Too high! Try again.");
+                } else {
+                    alert("Too low! Try again.");
+                }
+            }
+            updateBars();
+        }
+
+        function startMemoryGame() {
+            // Memory game logic
+        }
+
+        function startClickerGame() {
+            // Clicker game logic
+        }
+
+        function openMenu() {
+            document.getElementById("menu").style.display = "block";
+        }
+
+        function closeMenu() {
+            document.getElementById("menu").style.display = "none";
+        }
+
+        // Initialization
+        updateBars();
+        setInterval(() => {
+            stats.hunger = Math.max(0, stats.hunger - 2);
+            stats.happiness = Math.max(0, stats.happiness - 1);
+            stats.hygiene = Math.max(0, stats.hygiene - 1);
+            stats.age += 0.05;
+            evolve();
+            updateBars();
+        }, 5000);
     </script>
 </body>
 </html>
